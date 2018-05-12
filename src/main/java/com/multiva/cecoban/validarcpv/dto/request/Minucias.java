@@ -2,22 +2,18 @@ package com.multiva.cecoban.validarcpv.dto.request;
 
 public class Minucias {
 	
-	private String tipo;
 	private int ancho;
 	private int alto;
+	private String tipo;
 	private int dedo;
 	private String minucia;
 	
 	private Minucias(Builder builder) {
-		this.tipo = builder.tipo;
 		this.ancho = builder.ancho;
 		this.alto = builder.alto;
+		this.tipo = builder.tipo;
 		this.dedo = builder.dedo;
 		this.minucia = builder.minucia;
-	}
-	
-	public String getTipo() {
-		return tipo;
 	}
 
 	public int getAncho() {
@@ -26,6 +22,10 @@ public class Minucias {
 
 	public int getAlto() {
 		return alto;
+	}
+	
+	public String getTipo() {
+		return tipo;
 	}
 
 	public int getDedo() {
@@ -38,22 +38,17 @@ public class Minucias {
 
 	@Override
 	public String toString() {
-		return "Minucias [tipo=" + tipo + ", ancho=" + ancho + ", alto=" + alto + ", dedo=" + dedo + ", minucia="
+		return "Minucias [ancho=" + ancho + ", alto=" + alto + ", tipo=" + tipo + ", dedo=" + dedo + ", minucia="
 				+ minucia + "]";
 	}
 
 	public static class Builder {
 		
-		private String tipo;
 		private int ancho;
 		private int alto;
+		private String tipo;
 		private int dedo;
 		private String minucia;
-		
-		public Builder tipo(String tipo) {
-			this.tipo = tipo;
-			return this;
-		}
 		
 		public Builder ancho(int ancho) {
 			this.ancho = ancho;
@@ -62,6 +57,11 @@ public class Minucias {
 		
 		public Builder alto(int alto) {
 			this.alto = alto;
+			return this;
+		}
+		
+		public Builder tipo(String tipo) {
+			this.tipo = tipo;
 			return this;
 		}
 		

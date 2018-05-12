@@ -1,11 +1,12 @@
 package com.multiva.cecoban.validarcpv.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -16,7 +17,7 @@ import com.multiva.cecoban.validarcpv.dto.request.Datos;
 import com.multiva.cecoban.validarcpv.dto.request.Encabezado;
 import com.multiva.cecoban.validarcpv.dto.request.Localidad;
 import com.multiva.cecoban.validarcpv.dto.request.Minucias;
-import com.multiva.cecoban.validarcpv.dto.request.PosicionSatelital;
+//import com.multiva.cecoban.validarcpv.dto.request.PosicionSatelital;
 import com.multiva.cecoban.validarcpv.dto.request.Request;
 import com.multiva.cecoban.validarcpv.dto.request.Ubicacion;
 import com.multiva.cecoban.validarcpv.dto.response.BodyResponse;
@@ -57,6 +58,9 @@ public class ValidarCpvApiController {
 	private PosicionSatelital posicionSatelital;*/
 	
 	private Request request;
+	
+	@Value("${cecoban.validarcpv.formatoimagen}")
+	private String formatoImagen;
 	
 	@PostMapping("/validarcpv")
 	public BodyResponse validarCpv(
@@ -108,23 +112,11 @@ public class ValidarCpvApiController {
 		localidad.setEstado(estado);
 		
 		if(imagenIndiceDerecho != null && !imagenIndiceDerecho.isEmpty()) {
-			//encriptar imagen a base64
-			Minucias minuciasDer = minuciasBuilder.tipo("WSQ")
-					.ancho(0)
-					.alto(0)
-					.dedo(2)
-					.minucia(imagenIndiceDerecho).build();		
-			minuciasArray.add(minuciasDer);
+			agregarMinucia(imagenIndiceIzquierdo, 2);
 		}
 		
 		if(imagenIndiceIzquierdo != null && !imagenIndiceIzquierdo.isEmpty()) {
-			//encriptar imagen a base64
-			Minucias minuciasIzq = minuciasBuilder.tipo("WSQ")
-					.ancho(0)
-					.alto(0)
-					.dedo(7)
-					.minucia(imagenIndiceIzquierdo).build();		
-			minuciasArray.add(minuciasIzq);
+			agregarMinucia(imagenIndiceIzquierdo, 7);
 		}
 		
 		ubicacion.setLocalidad(localidad);
@@ -142,8 +134,19 @@ public class ValidarCpvApiController {
 
 	private static String createID()
 	{	
-		String str = String.format("%018d", idCounter.getAndIncrement());  // Numero identificador de 18 dígitos
+		//String str = String.format("%018d", idCounter.getAndIncrement());  // Numero identificador de 18 dígitos
+		String str = "290553239617443019";
 	    return str;
+	}
+	
+	private void agregarMinucia(String imagen, int dedo) {
+		//String encoded = Base64.getEncoder().encodeToString(imagen.getBytes());
+		Minucias minuciasDer = minuciasBuilder.tipo(formatoImagen)
+				.dedo(dedo)
+				.minucia(imagen).build();
+				//.minucia(encoded).build();	
+				
+		minuciasArray.add(minuciasDer);
 	}
 
 }

@@ -11,6 +11,7 @@ import com.multiva.cecoban.validarcpv.dto.response.BodyResponse;
 import com.multiva.cecoban.validarcpv.dto.response.ComparacionCurp;
 import com.multiva.cecoban.validarcpv.dto.response.DataResponse;
 import com.multiva.cecoban.validarcpv.dto.response.Digestivos;
+import com.multiva.cecoban.validarcpv.dto.response.MinutiaeResponse;
 import com.multiva.cecoban.validarcpv.dto.response.Response;
 import com.multiva.cecoban.validarcpv.dto.response.RespuestaComparacion;
 import com.multiva.cecoban.validarcpv.dto.response.RespuestaSituacionRegistral;
@@ -46,6 +47,9 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 	@Autowired
 	private Digestivos digestivos;
 	
+	@Autowired
+	private MinutiaeResponse minutiaeResponse;
+	
 	private Response response;
 	
 	private ComparacionCurp comparacionCurp;
@@ -67,7 +71,8 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 				convertDigestivosJsonToJava(jsonCecobanResponse);
 				convertComparacionCurpJsonToJava(jsonCecobanResponse);
 			}else {
-				response = responseBuilder.codigoRespuesta(jsonResponse.getInt("codigoRespuesta"))
+				response = responseBuilder
+						.codigoRespuesta(jsonResponse.getInt("codigoRespuesta"))
 						.tiempoProcesamiento(jsonResponse.getInt("tiempoProcesamiento"))
 						.codigoRespuestaCCB(jsonResponse.getString("codigoRespuestaCCB"))
 						.descripcionRespuestaCCB(jsonResponse.getString("descripcionRespuestaCCB")).build();
@@ -76,7 +81,8 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 			e.printStackTrace();
 		}
 		
-		BodyResponse bodyResponse = 	bodyResponseBuilder.response(response)
+		BodyResponse bodyResponse = 	bodyResponseBuilder
+				.response(response)
 				.timeStamp(timeStamp)
 				.digestivos(digestivos)
 				.comparacionCurp(comparacionCurp).build();
@@ -105,8 +111,19 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 		dataResponse.setCodigoRespuestaDatos(jsonDataResponse.getInt("codigoRespuestaDatos"));
 		dataResponse.setRespuestaComparacion(respuestaComparacion);
 		dataResponse.setRespuestaSituacionRegistral(respuestaSituacionRegistral);
+		
+		if(jsonResponse.has("minutiaeResponse")) {
+			JSONObject jsonMinutiaeResponse = jsonResponse.getJSONObject("minutiaeResponse");
+			minutiaeResponse.setCodigoRespuestaMinucia(jsonMinutiaeResponse.getInt("codigoRespuestaMinucia"));
+			minutiaeResponse.setSimilitud2(jsonMinutiaeResponse.getString("similitud2"));
+			minutiaeResponse.setSimilitud7(jsonMinutiaeResponse.getString("similitud7"));
+		}else {
+			minutiaeResponse = null;
+		}
 				
-		response = responseBuilder.codigoRespuesta(jsonResponse.getInt("codigoRespuesta"))
+		response = responseBuilder
+				.minutiaeResponse(minutiaeResponse)
+				.codigoRespuesta(jsonResponse.getInt("codigoRespuesta"))
 				.fechaHoraPeticion(jsonResponse.getString("fechaHoraPeticion"))
 				.tiempoProcesamiento(jsonResponse.getInt("tiempoProcesamiento"))
 				.indiceSolicitud(jsonResponse.getString("indiceSolicitud"))
@@ -124,7 +141,6 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 		timeStamp.setMomento(jsonTimeStamp.getString("momento"));
 		timeStamp.setIndice(jsonTimeStamp.getString("indice"));
 		timeStamp.setNumeroSerie(jsonTimeStamp.getString("numeroSerie"));
-		
 		return timeStamp;
 		
 	}
@@ -149,5 +165,4 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 				.descripcionRespuestaRENAPO(jsonComparacionCurp.getString("descripcionRespuestaRENAPO")).build();
 		return comparacionCurp;
 	}
-
 }
