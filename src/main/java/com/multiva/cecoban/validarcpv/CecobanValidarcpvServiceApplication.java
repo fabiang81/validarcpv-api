@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CecobanValidarcpvServiceApplication {
+public class CecobanValidarCpvServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CecobanValidarcpvServiceApplication.class, args);
+		SpringApplication.run(CecobanValidarCpvServiceApplication.class, args);
 	}
 }

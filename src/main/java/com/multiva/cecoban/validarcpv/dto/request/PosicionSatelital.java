@@ -1,5 +1,8 @@
 package com.multiva.cecoban.validarcpv.dto.request;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PosicionSatelital {
 	
 	private float latitud;
@@ -16,6 +19,11 @@ public class PosicionSatelital {
 	}
 	public void setLongitud(float longitud) {
 		this.longitud = longitud;
+	}
+	
+	@Override
+	public String toString() {
+		return "PosicionSatelital [latitud=" + latitud + ", longitud=" + longitud + "]";
 	}
 	
 }

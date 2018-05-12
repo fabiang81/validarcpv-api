@@ -1,5 +1,7 @@
 package com.multiva.cecoban.validarcpv.dto.request;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class Encabezado {
 	
 	private String solicitudId;
@@ -7,29 +9,69 @@ public class Encabezado {
 	private String folioCliente;
 	private String tipoProceso;
 	
+	private Encabezado(Builder builder) {
+		this.solicitudId = builder.solicitudId;
+		this.institucionId = builder.institucionId;
+		this.folioCliente = builder.folioCliente;
+		this.tipoProceso = builder.tipoProceso;
+	}
+	
 	public String getSolicitudId() {
 		return solicitudId;
 	}
-	public void setSolicitudId(String solicitudId) {
-		this.solicitudId = solicitudId;
-	}
+
 	public String getInstitucionId() {
 		return institucionId;
 	}
-	public void setInstitucionId(String institucionId) {
-		this.institucionId = institucionId;
-	}
+
 	public String getFolioCliente() {
 		return folioCliente;
 	}
-	public void setFolioCliente(String folioCliente) {
-		this.folioCliente = folioCliente;
-	}
+
 	public String getTipoProceso() {
 		return tipoProceso;
 	}
-	public void setTipoProceso(String tipoProceso) {
-		this.tipoProceso = tipoProceso;
+
+	@Override
+	public String toString() {
+		return "Encabezado [solicitudId=" + solicitudId + ", institucionId=" + institucionId + ", folioCliente="
+				+ folioCliente + ", tipoProceso=" + tipoProceso + "]";
+	}
+
+
+	public static class Builder{
+		
+		private String solicitudId;
+		@Value("${cecoban.validarcpv.institucionid}")
+		private String institucionId;
+		private String folioCliente;
+		@Value("${cecoban.validarcpv.tipoproceso}")
+		private String tipoProceso;
+		
+		public Builder solicitudId(String solicitudId) {
+			this.solicitudId = solicitudId;
+			return this;
+		}
+		
+		public Builder institucionId(String institucionId) {
+			this.institucionId = institucionId;
+			return this;
+		}
+		
+		public Builder folioCliente(String folioCliente) {
+			this.folioCliente = folioCliente;
+			return this;
+		}
+		
+		public Builder tipoProceso(String tipoProceso) {
+			this.tipoProceso = tipoProceso;
+			return this;
+		}
+		
+		public Encabezado build() {
+			return new Encabezado(this);
+		}
+		
 	}
 
 }
