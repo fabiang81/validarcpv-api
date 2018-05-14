@@ -69,17 +69,15 @@ public class ValidarCpvApiClientImpl implements ValidarCpvApiClient {
 			httpEntity = new HttpEntity<>(jsonString, httpHeaders);
 			
 			@SuppressWarnings("rawtypes")
-			ResponseEntity<Map> validarCpvresponse = restTemplate.exchange(validarCpvUrl, HttpMethod.POST, httpEntity, Map.class);
-			if (validarCpvresponse.getStatusCode() == HttpStatus.OK) {
-				LOGGER.info("validarCpvresponse.getStatusCode() --> {}", validarCpvresponse.getStatusCode());
-	    			jsonObject = new JSONObject(validarCpvresponse.getBody());
+			ResponseEntity<Map> validarCpvResponse = restTemplate.exchange(validarCpvUrl, HttpMethod.POST, httpEntity, Map.class);
+			if (validarCpvResponse.getStatusCode() == HttpStatus.OK) {
+				LOGGER.info("validarCpvResponse.getStatusCode() --> {}", validarCpvResponse.getStatusCode());
+	    			jsonObject = new JSONObject(validarCpvResponse.getBody());
 				LOGGER.info("jsonObject response --> {}", jsonObject.toString());
 			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-		} /*catch (JSONException e) {
-			e.printStackTrace();
-		}*/
+		} 
 		return jsonObject;
 	}
 	

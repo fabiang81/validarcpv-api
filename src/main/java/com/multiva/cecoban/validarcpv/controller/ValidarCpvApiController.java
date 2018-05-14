@@ -28,7 +28,7 @@ public class ValidarCpvApiController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ValidarCpvApiController.class);
 	
-	private static AtomicLong idCounter = new AtomicLong();;
+	private static AtomicLong idCounter = new AtomicLong();
 	
 	@Autowired
 	private ValidarCpvApiService service;
