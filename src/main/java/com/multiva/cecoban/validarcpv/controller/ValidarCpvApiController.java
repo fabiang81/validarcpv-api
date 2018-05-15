@@ -62,7 +62,7 @@ public class ValidarCpvApiController {
 	@Value("${cecoban.validarcpv.formatoimagen}")
 	private String formatoImagen;
 	
-	@PostMapping("/validarcpv")
+	@PostMapping("/validarCpv")
 	public BodyResponse validarCpv(
 			@RequestParam("ocr") String ocr, 
 			@RequestParam("cic") String cic, 
@@ -134,8 +134,8 @@ public class ValidarCpvApiController {
 
 	private static String createID()
 	{	
-		//String str = String.format("%018d", idCounter.getAndIncrement());  // Numero identificador de 18 dígitos
-		String str = "290553239617443019";
+		String str = String.format("%018d", idCounter.getAndIncrement());  // Numero identificador de 18 dígitos
+		//String str = "290553239617443051";
 	    return str;
 	}
 	

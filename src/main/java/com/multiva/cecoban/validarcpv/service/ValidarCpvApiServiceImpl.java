@@ -3,7 +3,10 @@ package com.multiva.cecoban.validarcpv.service;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.multiva.cecoban.validarcpv.client.ValidarCpvApiClient;
 import com.multiva.cecoban.validarcpv.dto.request.Request;
@@ -18,6 +21,7 @@ import com.multiva.cecoban.validarcpv.dto.response.RespuestaSituacionRegistral;
 import com.multiva.cecoban.validarcpv.dto.response.TimeStamp;
 
 @Service
+@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 	
 	@Autowired
@@ -39,9 +43,6 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 	private RespuestaSituacionRegistral respuestaSituacionRegistral;
 	
 	@Autowired
-	private DataResponse dataResponse;
-	
-	@Autowired
 	private TimeStamp timeStamp;
 	
 	@Autowired
@@ -50,33 +51,23 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 	@Autowired
 	private MinutiaeResponse minutiaeResponse;
 	
+	@Autowired
+	private DataResponse dataResponse;
+	
 	private Response response;
 	
 	private ComparacionCurp comparacionCurp;
 
 	@Override
 	public BodyResponse validarCpv(Request request) {
-		/**
-		 * TODO:
-		 * Validación de request 
-		 */
 		
 		JSONObject jsonCecobanResponse = client.validarCpv(request);
 		
 		try {
-			JSONObject jsonResponse = jsonCecobanResponse.getJSONObject("response");
-			if(jsonResponse.getString("codigoRespuestaCCB").equals("CRGEN000")) {
-				convertResponseJsonToJava(jsonResponse);
-				convertTimeStampJsonToJava(jsonCecobanResponse);
-				convertDigestivosJsonToJava(jsonCecobanResponse);
-				convertComparacionCurpJsonToJava(jsonCecobanResponse);
-			}else {
-				response = responseBuilder
-						.codigoRespuesta(jsonResponse.getInt("codigoRespuesta"))
-						.tiempoProcesamiento(jsonResponse.getInt("tiempoProcesamiento"))
-						.codigoRespuestaCCB(jsonResponse.getString("codigoRespuestaCCB"))
-						.descripcionRespuestaCCB(jsonResponse.getString("descripcionRespuestaCCB")).build();
-			}
+			convertResponseJsonToJava(jsonCecobanResponse);
+			convertTimeStampJsonToJava(jsonCecobanResponse);
+			convertDigestivosJsonToJava(jsonCecobanResponse);
+			convertComparacionCurpJsonToJava(jsonCecobanResponse);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -90,79 +81,103 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 		return bodyResponse;
 	}
 	
-	private Response convertResponseJsonToJava(JSONObject jsonResponse) throws JSONException {	
-		JSONObject jsonDataResponse = jsonResponse.getJSONObject("dataResponse");
-		JSONObject jsonRespuestaComparacion = jsonDataResponse.getJSONObject("respuestaComparacion");
-		JSONObject jsonRespuestaSituacionRegistral = jsonDataResponse.getJSONObject("respuestaSituacionRegistral");
-		
-		RespuestaComparacion respuestaComparacion = respuestaComparacionBuilder.ocr(jsonRespuestaComparacion.getBoolean("ocr"))
-				.nombre(jsonRespuestaComparacion.getBoolean("nombre"))
-				.apellidoPaterno(jsonRespuestaComparacion.getBoolean("apellidoPaterno"))
-				.apellidoMaterno(jsonRespuestaComparacion.getBoolean("apellidoMaterno"))
-				.anioRegistro(jsonRespuestaComparacion.getBoolean("anioRegistro"))
-				.anioEmision(jsonRespuestaComparacion.getBoolean("anioEmision"))
-				.numeroEmisionCredencial(jsonRespuestaComparacion.getBoolean("numeroEmisionCredencial"))
-				.claveElector(jsonRespuestaComparacion.getBoolean("claveElector"))
-				.curp(jsonRespuestaComparacion.getBoolean("curp")).build();
-		
-		respuestaSituacionRegistral.setTipoSituacionRegistral(jsonRespuestaSituacionRegistral.getString("tipoSituacionRegistral"));
-		respuestaSituacionRegistral.setTipoReporteRoboExtravio(jsonRespuestaSituacionRegistral.getString("tipoReporteRoboExtravio"));
-		
-		dataResponse.setCodigoRespuestaDatos(jsonDataResponse.getInt("codigoRespuestaDatos"));
-		dataResponse.setRespuestaComparacion(respuestaComparacion);
-		dataResponse.setRespuestaSituacionRegistral(respuestaSituacionRegistral);
-		
-		if(jsonResponse.has("minutiaeResponse")) {
-			JSONObject jsonMinutiaeResponse = jsonResponse.getJSONObject("minutiaeResponse");
-			minutiaeResponse.setCodigoRespuestaMinucia(jsonMinutiaeResponse.getInt("codigoRespuestaMinucia"));
-			minutiaeResponse.setSimilitud2(jsonMinutiaeResponse.getString("similitud2"));
-			minutiaeResponse.setSimilitud7(jsonMinutiaeResponse.getString("similitud7"));
+	private Response convertResponseJsonToJava(JSONObject jsonCecobanResponse) throws JSONException {
+		JSONObject jsonResponse = jsonCecobanResponse.getJSONObject("response");
+		JSONObject jsonDataResponse = validateJsonField(jsonResponse, "dataResponse");
+		if(jsonDataResponse != null) {
+			JSONObject jsonRespuestaComparacion = jsonDataResponse.getJSONObject("respuestaComparacion");
+			JSONObject jsonRespuestaSituacionRegistral = jsonDataResponse.getJSONObject("respuestaSituacionRegistral");
+			RespuestaComparacion respuestaComparacion = respuestaComparacionBuilder
+					.ocr(validateJsonField(jsonRespuestaComparacion, "ocr"))
+					.nombre(validateJsonField(jsonRespuestaComparacion, "nombre"))
+					.apellidoPaterno(validateJsonField(jsonRespuestaComparacion, "apellidoPaterno"))
+					.apellidoMaterno(validateJsonField(jsonRespuestaComparacion, "apellidoMaterno"))
+					.anioRegistro(validateJsonField(jsonRespuestaComparacion, "anioRegistro"))
+					.anioEmision(validateJsonField(jsonRespuestaComparacion, "anioEmision"))
+					.numeroEmisionCredencial(validateJsonField(jsonRespuestaComparacion, "numeroEmisionCredencial"))
+					.claveElector(validateJsonField(jsonRespuestaComparacion, "claveElector"))
+					.curp(validateJsonField(jsonRespuestaComparacion, "curp")).build();
+			
+			respuestaSituacionRegistral.setTipoSituacionRegistral(validateJsonField(jsonRespuestaSituacionRegistral, "tipoSituacionRegistral"));
+			respuestaSituacionRegistral.setTipoReporteRoboExtravio(validateJsonField(jsonRespuestaSituacionRegistral, "tipoReporteRoboExtravio"));
+			
+			dataResponse.setCodigoRespuestaDatos(validateJsonField(jsonDataResponse, "codigoRespuestaDatos"));
+			dataResponse.setRespuestaComparacion(respuestaComparacion);
+			dataResponse.setRespuestaSituacionRegistral(respuestaSituacionRegistral);
+			
+			JSONObject jsonMinutiaeResponse = validateJsonField(jsonResponse, "minutiaeResponse");
+			
+			minutiaeResponse.setCodigoRespuestaMinucia(validateJsonField(jsonMinutiaeResponse, "codigoRespuestaMinucia"));
+			minutiaeResponse.setSimilitud2(validateJsonField(jsonMinutiaeResponse, "similitud2"));
+			minutiaeResponse.setSimilitud7(validateJsonField(jsonMinutiaeResponse, "similitud7"));
+			
 		}else {
+			dataResponse = null;
 			minutiaeResponse = null;
 		}
-				
+		
 		response = responseBuilder
 				.minutiaeResponse(minutiaeResponse)
-				.codigoRespuesta(jsonResponse.getInt("codigoRespuesta"))
-				.fechaHoraPeticion(jsonResponse.getString("fechaHoraPeticion"))
-				.tiempoProcesamiento(jsonResponse.getInt("tiempoProcesamiento"))
-				.indiceSolicitud(jsonResponse.getString("indiceSolicitud"))
-				.peticionId(jsonResponse.getString("peticionId"))
-				.folioCliente(jsonResponse.getString("folioCliente"))
-				.codigoRespuestaCCB(jsonResponse.getString("codigoRespuestaCCB"))
-				.descripcionRespuestaCCB(jsonResponse.getString("descripcionRespuestaCCB"))
+				.codigoRespuesta(validateJsonField(jsonResponse, "codigoRespuesta"))
+				.fechaHoraPeticion(validateJsonField(jsonResponse, "fechaHoraPeticion"))
+				.tiempoProcesamiento(validateJsonField(jsonResponse, "tiempoProcesamiento"))
+				.indiceSolicitud(validateJsonField(jsonResponse, "indiceSolicitud"))
+				.peticionId(validateJsonField(jsonResponse, "peticionId"))
+				.folioCliente(validateJsonField(jsonResponse, "folioCliente"))
+				.codigoRespuestaCCB(validateJsonField(jsonResponse, "codigoRespuestaCCB"))
+				.descripcionRespuestaCCB(validateJsonField(jsonResponse, "descripcionRespuestaCCB"))
 				.dataResponse(dataResponse).build();
 		
 		return response;
 	}
 	
 	private TimeStamp convertTimeStampJsonToJava(JSONObject jsonCecobanResponse) throws JSONException{
-		JSONObject jsonTimeStamp = jsonCecobanResponse.getJSONObject("timeStamp");
-		timeStamp.setMomento(jsonTimeStamp.getString("momento"));
-		timeStamp.setIndice(jsonTimeStamp.getString("indice"));
-		timeStamp.setNumeroSerie(jsonTimeStamp.getString("numeroSerie"));
+		JSONObject jsonTimeStamp = validateJsonField(jsonCecobanResponse, "timeStamp");
+		if(jsonTimeStamp != null) {
+			timeStamp.setMomento(validateJsonField(jsonTimeStamp, "momento"));
+			timeStamp.setIndice(validateJsonField(jsonTimeStamp, "indice"));
+			timeStamp.setNumeroSerie(validateJsonField(jsonTimeStamp, "numeroSerie"));
+		}else {
+			timeStamp = null;
+		}
 		return timeStamp;
 		
 	}
 	
 	private Digestivos convertDigestivosJsonToJava(JSONObject jsonCecobanResponse) throws JSONException{
-		JSONObject jsonDigestivos = jsonCecobanResponse.getJSONObject("digestivos");
-		digestivos.setDigEntradaDatos(jsonDigestivos.getString("digEntradaDatos"));
-		digestivos.setDigSalidaDatos(jsonDigestivos.getString("digSalidaDatos"));
-		digestivos.setDigTimestamp(jsonDigestivos.getString("digTimeStamp"));
+		JSONObject jsonDigestivos = validateJsonField(jsonCecobanResponse, "digestivos");
+		if(jsonDigestivos != null) {
+			digestivos.setDigEntradaDatos(validateJsonField(jsonDigestivos, "digEntradaDatos"));
+			digestivos.setDigSalidaDatos(validateJsonField(jsonDigestivos, "digSalidaDatos"));
+			digestivos.setDigTimestamp(validateJsonField(jsonDigestivos, "digTimeStamp"));
+		}else {
+			digestivos = null;
+		}
 		return digestivos;
 	}
 	
 	private ComparacionCurp convertComparacionCurpJsonToJava(JSONObject jsonCecobanResponse) throws JSONException{
-		JSONObject jsonComparacionCurp= jsonCecobanResponse.getJSONObject("comparacionCURP");
-		comparacionCurp = comparacionCurpBuilder.curpCoincide(jsonComparacionCurp.getBoolean("curpCoincide"))
-				.nombreCoincide(jsonComparacionCurp.getBoolean("nombreCoincide"))
-				.apellidoPaternoCoincide(jsonComparacionCurp.getBoolean("apellidoPaternoCoincide"))
-				.apellidoMaternoCoincide(jsonComparacionCurp.getBoolean("apellidoMaternoCoincide"))
-				.codigoRespuestaCCB(jsonComparacionCurp.getString("codigoRespuestaCCB"))
-				.descripcionRespuestaCCB(jsonComparacionCurp.getString("descripcionRespuestaCCB"))
-				.codigoRespuestaRENAPO(jsonComparacionCurp.getString("codigoRespuestaRENAPO"))
-				.descripcionRespuestaRENAPO(jsonComparacionCurp.getString("descripcionRespuestaRENAPO")).build();
+		JSONObject jsonComparacionCurp= validateJsonField(jsonCecobanResponse, "comparacionCURP");
+		if(jsonComparacionCurp != null) {
+			comparacionCurp = comparacionCurpBuilder.curpCoincide(validateJsonField(jsonComparacionCurp, "curpCoincide"))
+					.nombreCoincide(validateJsonField(jsonComparacionCurp, "nombreCoincide"))
+					.apellidoPaternoCoincide(validateJsonField(jsonComparacionCurp, "apellidoPaternoCoincide"))
+					.apellidoMaternoCoincide(validateJsonField(jsonComparacionCurp, "apellidoMaternoCoincide"))
+					.codigoRespuestaCCB(validateJsonField(jsonComparacionCurp, "codigoRespuestaCCB"))
+					.descripcionRespuestaCCB(validateJsonField(jsonComparacionCurp, "descripcionRespuestaCCB"))
+					.codigoRespuestaRENAPO(validateJsonField(jsonComparacionCurp, "codigoRespuestaRENAPO"))
+					.descripcionRespuestaRENAPO(validateJsonField(jsonComparacionCurp, "descripcionRespuestaRENAPO")).build();
+		}else {
+			comparacionCurp = null;
+		}
 		return comparacionCurp;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private <T> T validateJsonField(JSONObject jsonString, String field) {
+		if(jsonString.has(field)) {
+			return (T) jsonString.get(field);
+		}
+		return null;
 	}
 }

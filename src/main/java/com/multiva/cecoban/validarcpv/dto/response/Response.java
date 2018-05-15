@@ -3,9 +3,9 @@ package com.multiva.cecoban.validarcpv.dto.response;
 public class Response {
 	
 	private MinutiaeResponse minutiaeResponse;
-	private int codigoRespuesta;
+	private Integer codigoRespuesta;
 	private String fechaHoraPeticion;
-	private int tiempoProcesamiento;
+	private Integer tiempoProcesamiento;
 	private String indiceSolicitud;
 	private String peticionId;
 	private String folioCliente;
@@ -40,7 +40,7 @@ public class Response {
 		return minutiaeResponse;
 	}
 
-	public int getCodigoRespuesta() {
+	public Integer getCodigoRespuesta() {
 		return codigoRespuesta;
 	}
 
@@ -48,7 +48,7 @@ public class Response {
 		return fechaHoraPeticion;
 	}
 
-	public int getTiempoProcesamiento() {
+	public Integer getTiempoProcesamiento() {
 		return tiempoProcesamiento;
 	}
 
@@ -79,9 +79,9 @@ public class Response {
 	public static class Builder {
 		
 		private MinutiaeResponse minutiaeResponse;
-		private int codigoRespuesta;
+		private Integer codigoRespuesta;
 		private String fechaHoraPeticion;
-		private int tiempoProcesamiento;
+		private Integer tiempoProcesamiento;
 		private String indiceSolicitud;
 		private String peticionId;
 		private String folioCliente;
@@ -95,7 +95,7 @@ public class Response {
 			return this;
 		}
 		
-		public Builder codigoRespuesta(int codigoRespuesta) {
+		public Builder codigoRespuesta(Integer codigoRespuesta) {
 			this.codigoRespuesta = codigoRespuesta;
 			return this;
 		}
@@ -105,7 +105,7 @@ public class Response {
 			return this;
 		}
 		
-		public Builder tiempoProcesamiento(int tiempoProcesamiento) {
+		public Builder tiempoProcesamiento(Integer tiempoProcesamiento) {
 			this.tiempoProcesamiento = tiempoProcesamiento;
 			return this;
 		}

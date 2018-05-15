@@ -5,14 +5,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class MinutiaeResponse {
 	
-	private int codigoRespuestaMinucia;
+	private Integer codigoRespuestaMinucia;
 	private String similitud2;
 	private String similitud7;
 	
-	public int getCodigoRespuestaMinucia() {
+	public Integer getCodigoRespuestaMinucia() {
 		return codigoRespuestaMinucia;
 	}
-	public void setCodigoRespuestaMinucia(int codigoRespuestaMinucia) {
+	public void setCodigoRespuestaMinucia(Integer codigoRespuestaMinucia) {
 		this.codigoRespuestaMinucia = codigoRespuestaMinucia;
 	}
 	public String getSimilitud2() {

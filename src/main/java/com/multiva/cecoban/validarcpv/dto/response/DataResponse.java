@@ -5,14 +5,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataResponse {
 	
-	private int codigoRespuestaDatos;
+	private Integer codigoRespuestaDatos;
 	private RespuestaComparacion respuestaComparacion;
 	private RespuestaSituacionRegistral respuestaSituacionRegistral;
 	
-	public int getCodigoRespuestaDatos() {
+	public Integer getCodigoRespuestaDatos() {
 		return codigoRespuestaDatos;
 	}
-	public void setCodigoRespuestaDatos(int codigoRespuestaDatos) {
+	public void setCodigoRespuestaDatos(Integer codigoRespuestaDatos) {
 		this.codigoRespuestaDatos = codigoRespuestaDatos;
 	}
 	public RespuestaComparacion getRespuestaComparacion() {

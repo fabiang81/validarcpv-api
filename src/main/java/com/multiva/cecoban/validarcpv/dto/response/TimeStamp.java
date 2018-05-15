@@ -28,9 +28,4 @@ public class TimeStamp {
 		this.numeroSerie = numeroSerie;
 	}
 	
-	@Override
-	public String toString() {
-		return "TimeStamp [momento=" + momento + ", indice=" + indice + ", numeroSerie=" + numeroSerie + "]";
-	}
-	
 }

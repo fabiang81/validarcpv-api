@@ -2,7 +2,7 @@ package com.multiva.cecoban.validarcpv.dto.response;
 
 public class RespuestaComparacion {
 	
-	private int codigoRespuestaDatos;
+	private Integer codigoRespuestaDatos;
 	private boolean ocr;
 	private boolean cic;
 	private boolean nombre;
@@ -28,7 +28,7 @@ public class RespuestaComparacion {
 		this.curp = builder.curp;
 	}
 	
-	public int getCodigoRespuestaDatos() {
+	public Integer getCodigoRespuestaDatos() {
 		return codigoRespuestaDatos;
 	}
 
@@ -84,7 +84,7 @@ public class RespuestaComparacion {
 
 	public static class Builder {
 		
-		private int codigoRespuestaDatos;
+		private Integer codigoRespuestaDatos;
 		private boolean ocr;
 		private boolean cic;
 		private boolean nombre;
@@ -96,7 +96,7 @@ public class RespuestaComparacion {
 		private boolean claveElector;
 		private boolean curp;
 		
-		public Builder codigoRespuestaDatos(int codigoRespuestaDatos) {
+		public Builder codigoRespuestaDatos(Integer codigoRespuestaDatos) {
 			this.codigoRespuestaDatos = codigoRespuestaDatos;
 			return this;
 		}
