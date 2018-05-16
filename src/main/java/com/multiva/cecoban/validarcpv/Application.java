@@ -1,20 +1,27 @@
 package com.multiva.cecoban.validarcpv;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 @SpringBootApplication
-public class CecobanValidarCpvServiceApplication extends SpringBootServletInitializer{//
+@ComponentScan
+@EnableAutoConfiguration
+public class Application extends SpringBootServletInitializer{//
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 	
 	//configuration for deploying a war file
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(CecobanValidarCpvServiceApplication.class);
+		return builder.sources(Application.class);
 	}
-
-	public static void main(String[] args) {
-		SpringApplication.run(CecobanValidarCpvServiceApplication.class, args);
-	}
+	
 }
