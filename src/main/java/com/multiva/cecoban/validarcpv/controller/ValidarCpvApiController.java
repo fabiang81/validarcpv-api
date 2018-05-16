@@ -65,8 +65,7 @@ public class ValidarCpvApiController {
 	@Value("${cecoban.validarcpv.formatoimagen}")
 	private String formatoImagen;
 	
-	//@PostMapping("/validarCpv")
-	@RequestMapping(value ="/validarCpv", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping("/validarCpv")
 	public BodyResponse validarCpv(
 			@RequestParam("ocr") String ocr, 
 			@RequestParam("cic") String cic, 
