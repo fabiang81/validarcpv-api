@@ -3,6 +3,8 @@ package com.multiva.cecoban.validarcpv.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -62,7 +64,8 @@ public class ValidarCpvApiController {
 	@Value("${cecoban.validarcpv.formatoimagen}")
 	private String formatoImagen;
 	
-	@PostMapping("/validarCpv")
+	//@PostMapping("/validarCpv")
+	@RequestMapping(value ="/validarCpv", method = RequestMethod.POST)
 	public BodyResponse validarCpv(
 			@RequestParam("ocr") String ocr, 
 			@RequestParam("cic") String cic, 
