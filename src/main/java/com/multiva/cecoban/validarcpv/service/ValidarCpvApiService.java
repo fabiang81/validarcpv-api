@@ -1,10 +1,10 @@
 package com.multiva.cecoban.validarcpv.service;
 
 import com.multiva.cecoban.validarcpv.dto.request.Request;
-import com.multiva.cecoban.validarcpv.dto.response.BodyResponse;
+import com.multiva.cecoban.validarcpv.dto.response.ResponseBody;
 
 public interface ValidarCpvApiService {
 	
-	BodyResponse validarCpv(Request request);
+	ResponseBody validarCpv(Request request);
 
 }

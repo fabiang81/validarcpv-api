@@ -10,7 +10,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.multiva.cecoban.validarcpv.client.ValidarCpvApiClient;
 import com.multiva.cecoban.validarcpv.dto.request.Request;
-import com.multiva.cecoban.validarcpv.dto.response.BodyResponse;
+import com.multiva.cecoban.validarcpv.dto.response.ResponseBody;
 import com.multiva.cecoban.validarcpv.dto.response.ComparacionCurp;
 import com.multiva.cecoban.validarcpv.dto.response.DataResponse;
 import com.multiva.cecoban.validarcpv.dto.response.Digestivos;
@@ -37,7 +37,7 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 	private ComparacionCurp.Builder comparacionCurpBuilder;
 	
 	@Autowired
-	private BodyResponse.Builder bodyResponseBuilder;
+	private ResponseBody.Builder bodyResponseBuilder;
 	
 	@Autowired
 	private RespuestaSituacionRegistral respuestaSituacionRegistral;
@@ -59,7 +59,7 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 	private ComparacionCurp comparacionCurp;
 
 	@Override
-	public BodyResponse validarCpv(Request request) {
+	public ResponseBody validarCpv(Request request) {
 		
 		JSONObject jsonCecobanResponse = client.validarCpv(request);
 		
@@ -72,7 +72,7 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 			e.printStackTrace();
 		}
 		
-		BodyResponse bodyResponse = 	bodyResponseBuilder
+		ResponseBody bodyResponse = 	bodyResponseBuilder
 				.response(response)
 				.timeStamp(timeStamp)
 				.digestivos(digestivos)

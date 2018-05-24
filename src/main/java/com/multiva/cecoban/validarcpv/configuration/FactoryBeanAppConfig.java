@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
@@ -13,12 +14,13 @@ import com.multiva.cecoban.validarcpv.dto.request.Datos;
 import com.multiva.cecoban.validarcpv.dto.request.Encabezado;
 import com.multiva.cecoban.validarcpv.dto.request.Minucias;
 import com.multiva.cecoban.validarcpv.dto.request.Request;
-import com.multiva.cecoban.validarcpv.dto.response.BodyResponse;
+import com.multiva.cecoban.validarcpv.dto.response.ResponseBody;
 import com.multiva.cecoban.validarcpv.dto.response.ComparacionCurp;
 import com.multiva.cecoban.validarcpv.dto.response.Response;
 import com.multiva.cecoban.validarcpv.dto.response.RespuestaComparacion;
 
 @Configuration
+@ComponentScan("com.multiva.cecoban.commons.*")
 public class FactoryBeanAppConfig {
 	
 	/**Beans configurados para la clase ValidarCpvApiController
@@ -92,8 +94,8 @@ public class FactoryBeanAppConfig {
 	}
 	
 	@Bean
-	public BodyResponse.Builder bodyResponse(){
-		return new BodyResponse.Builder();
+	public ResponseBody.Builder bodyResponse(){
+		return new ResponseBody.Builder();
 	}
 
 }
