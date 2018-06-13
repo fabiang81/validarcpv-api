@@ -88,15 +88,15 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 			JSONObject jsonRespuestaComparacion = jsonDataResponse.getJSONObject("respuestaComparacion");
 			JSONObject jsonRespuestaSituacionRegistral = jsonDataResponse.getJSONObject("respuestaSituacionRegistral");
 			RespuestaComparacion respuestaComparacion = respuestaComparacionBuilder
-					.ocr(validateJsonField(jsonRespuestaComparacion, "ocr"))
-					.nombre(validateJsonField(jsonRespuestaComparacion, "nombre"))
-					.apellidoPaterno(validateJsonField(jsonRespuestaComparacion, "apellidoPaterno"))
-					.apellidoMaterno(validateJsonField(jsonRespuestaComparacion, "apellidoMaterno"))
-					.anioRegistro(validateJsonField(jsonRespuestaComparacion, "anioRegistro"))
-					.anioEmision(validateJsonField(jsonRespuestaComparacion, "anioEmision"))
-					.numeroEmisionCredencial(validateJsonField(jsonRespuestaComparacion, "numeroEmisionCredencial"))
-					.claveElector(validateJsonField(jsonRespuestaComparacion, "claveElector"))
-					.curp(validateJsonField(jsonRespuestaComparacion, "curp")).build();
+					.ocr(validateJsonBooleanField(jsonRespuestaComparacion, "ocr"))
+					.nombre(validateJsonBooleanField(jsonRespuestaComparacion, "nombre"))
+					.apellidoPaterno(validateJsonBooleanField(jsonRespuestaComparacion, "apellidoPaterno"))
+					.apellidoMaterno(validateJsonBooleanField(jsonRespuestaComparacion, "apellidoMaterno"))
+					.anioRegistro(validateJsonBooleanField(jsonRespuestaComparacion, "anioRegistro"))
+					.anioEmision(validateJsonBooleanField(jsonRespuestaComparacion, "anioEmision"))
+					.numeroEmisionCredencial(validateJsonBooleanField(jsonRespuestaComparacion, "numeroEmisionCredencial"))
+					.claveElector(validateJsonBooleanField(jsonRespuestaComparacion, "claveElector"))
+					.curp(validateJsonBooleanField(jsonRespuestaComparacion, "curp")).build();
 			
 			respuestaSituacionRegistral.setTipoSituacionRegistral(validateJsonField(jsonRespuestaSituacionRegistral, "tipoSituacionRegistral"));
 			respuestaSituacionRegistral.setTipoReporteRoboExtravio(validateJsonField(jsonRespuestaSituacionRegistral, "tipoReporteRoboExtravio"));
@@ -160,9 +160,9 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 		JSONObject jsonComparacionCurp= validateJsonField(jsonCecobanResponse, "comparacionCURP");
 		if(jsonComparacionCurp != null) {
 			comparacionCurp = comparacionCurpBuilder.curpCoincide(validateJsonField(jsonComparacionCurp, "curpCoincide"))
-					.nombreCoincide(validateJsonField(jsonComparacionCurp, "nombreCoincide"))
-					.apellidoPaternoCoincide(validateJsonField(jsonComparacionCurp, "apellidoPaternoCoincide"))
-					.apellidoMaternoCoincide(validateJsonField(jsonComparacionCurp, "apellidoMaternoCoincide"))
+					.nombreCoincide(validateJsonBooleanField(jsonComparacionCurp, "nombreCoincide"))
+					.apellidoPaternoCoincide(validateJsonBooleanField(jsonComparacionCurp, "apellidoPaternoCoincide"))
+					.apellidoMaternoCoincide(validateJsonBooleanField(jsonComparacionCurp, "apellidoMaternoCoincide"))
 					.codigoRespuestaCCB(validateJsonField(jsonComparacionCurp, "codigoRespuestaCCB"))
 					.descripcionRespuestaCCB(validateJsonField(jsonComparacionCurp, "descripcionRespuestaCCB"))
 					.codigoRespuestaRENAPO(validateJsonField(jsonComparacionCurp, "codigoRespuestaRENAPO"))
@@ -175,9 +175,16 @@ public class ValidarCpvApiServiceImpl implements ValidarCpvApiService {
 	
 	@SuppressWarnings("unchecked")
 	private <T> T validateJsonField(JSONObject jsonString, String field) {
-		if(jsonString.has(field)) {
+		if(jsonString!=null && jsonString.has(field)) {
 			return (T) jsonString.get(field);
 		}
 		return null;
+	}
+	
+	private Boolean validateJsonBooleanField(JSONObject jsonString, String field) {
+		if(jsonString!=null && jsonString.has(field)) {
+			return jsonString.getBoolean(field);
+		}
+		return false;
 	}
 }
