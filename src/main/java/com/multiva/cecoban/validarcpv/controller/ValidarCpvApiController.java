@@ -120,7 +120,7 @@ public class ValidarCpvApiController {
 		
 		ubicacion.setLocalidad(localidad);
 		
-		if(minuciasArray.size()!=0) {
+		if(minuciasArray != null && minuciasArray.size()!=0) {
 			request = requestBuilder.encabezado(encabezado).datos(datos).ubicacion(ubicacion)
 					.consentimiento(dataRequest.isConsentimiento() ? 1 : 0).minucias(minuciasArray).build();
 		}else {
