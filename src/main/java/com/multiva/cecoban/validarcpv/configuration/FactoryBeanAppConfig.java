@@ -7,8 +7,11 @@ import org.json.JSONObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.multiva.cecoban.validarcpv.dto.request.Datos;
 import com.multiva.cecoban.validarcpv.dto.request.Encabezado;
@@ -28,6 +31,7 @@ public class FactoryBeanAppConfig {
 	 */
 	
 	@Bean
+	@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 	public List<Minucias> minuciasArray(){
 		return new ArrayList<>();
 	}
