@@ -124,9 +124,8 @@ public class ValidarCpvApiController {
 			request = requestBuilder.encabezado(encabezado).datos(datos).ubicacion(ubicacion)
 					.consentimiento(dataRequest.isConsentimiento() ? 1 : 0).minucias(minuciasArray).build();
 		}else {
-			minuciasArray = null;
 			request = requestBuilder.encabezado(encabezado).datos(datos).ubicacion(ubicacion)
-					.consentimiento(dataRequest.isConsentimiento() ? 1 : 0).build();
+					.consentimiento(dataRequest.isConsentimiento() ? 1 : 0).minucias(null).build();
 		}
 		
 		return service.validarCpv(request);
